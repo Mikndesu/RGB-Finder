@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-
 public class CustomRenderer implements GLSurfaceView.Renderer {
 
     private final Context context;
@@ -25,8 +24,7 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
         context = cont;
     }
 
-
-    public float[] vert() {
+    public float[] vert(int x) {
         //n角形
         int n = MainActivity.corners;
         ArrayList<Float> a_vertices = new ArrayList<>();
@@ -34,8 +32,8 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
             float a, b;
                 a = length * (float)(Math.cos(Math.toRadians((360/n)*i)));
                 b = length * (float)(Math.sin(Math.toRadians((360/n)*i)));
-                a_vertices.add(a);
-                a_vertices.add(b);
+                a_vertices.add(x * a);
+                a_vertices.add(x * (b + 300f));
                 a_vertices.add(0f);
         }
         float[] verticies = Utils.toArray_f(a_vertices);
@@ -60,7 +58,7 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
         //画面をクリア
-        GLES20.glClearColor(0f, 0f, 0f, 1f);
+        GLES20.glClearColor(0.5f, 0.8f, 0.3f, 0.5f);
 
         //シェーダーをコンパイル
         int vertexShader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
@@ -82,18 +80,18 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceChanged(GL10 gl10, int width, int height) {
-        /*
-         * ビューポート変換
-         * @see <a href="http://tkengo.github.io/blog/2015/01/17/opengl-es-2-2d-knowledge-4/">label</a>
-         */
+//        /*
+//         * ビューポート変換
+//         * @see <a href="http://tkengo.github.io/blog/2015/01/17/opengl-es-2-2d-knowledge-4/">label</a>
+//         */
         GLES20.glViewport(0, 0, width, height);
 
-        /*
-         * ビュー座標変換
-         * @see <a href="http://tkengo.github.io/blog/2015/01/10/opengl-es-2-2d-knowledge-3#view-transformation-matrix">label</a>
-         * 射影変換
-         * @see <a href="http://tkengo.github.io/blog/2015/01/10/opengl-es-2-2d-knowledge-3#projection-transformation-matrix">label</a>
-         */
+//        /*
+//         * ビュー座標変換
+//         * @see <a href="http://tkengo.github.io/blog/2015/01/10/opengl-es-2-2d-knowledge-3#view-transformation-matrix">label</a>
+//         * 射影変換
+//         * @see <a href="http://tkengo.github.io/blog/2015/01/10/opengl-es-2-2d-knowledge-3#projection-transformation-matrix">label</a>
+//         */
         float[] projectionMatrix = new float[16];
         float[] viewMatrix       = new float[16];
         Matrix.setLookAtM(viewMatrix, 0, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f);
@@ -105,8 +103,7 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onDrawFrame(GL10 gl10) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-
-        FloatBuffer vertexBuffer = Utils.convert(vert());
+        FloatBuffer vertexBuffer = Utils.convert(vert(1));
         ShortBuffer indexBuffer = Utils.convert(inde());
 
         float[] worldMatrix = new float[16];
@@ -125,6 +122,26 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
         //描画
         GLES20.glDrawElements(GLES20.GL_TRIANGLE_FAN, indexBuffer.capacity(), GLES20.GL_UNSIGNED_SHORT, indexBuffer);
 
+        GLES20.glDisableVertexAttribArray(attLoc1);
+
+
+        FloatBuffer vertexBuffe = Utils.convert(vert(-2));
+
+        float[] worldMatrix1 = new float[16];
+        Matrix.setIdentityM(worldMatrix1, 0);
+        Matrix.rotateM(worldMatrix1, 0, (float) mFrameCount / 2.0f, 0, 0, 1);
+
+        int attLoc11 = GLES20.glGetAttribLocation(mProgramId, "position");
+        int uniLoc11 = GLES20.glGetUniformLocation(mProgramId, "vpMatrix");
+        int uniLoc21 = GLES20.glGetUniformLocation(mProgramId, "wMatrix");
+        GLES20.glEnableVertexAttribArray(attLoc11);
+
+        GLES20.glVertexAttribPointer(attLoc11, 3, GLES30.GL_FLOAT, false, 0, vertexBuffe);
+        GLES20.glUniformMatrix4fv(uniLoc11, 1, false, mViewAndProjectionMatrix, 0);
+        GLES20.glUniformMatrix4fv(uniLoc21, 1, false, worldMatrix1, 0);
+
+        //描画
+        GLES20.glDrawElements(GLES20.GL_TRIANGLE_FAN, indexBuffer.capacity(), GLES20.GL_UNSIGNED_SHORT, indexBuffer);
         GLES20.glDisableVertexAttribArray(attLoc1);
 
         mFrameCount++;
