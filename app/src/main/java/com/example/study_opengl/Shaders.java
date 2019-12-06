@@ -21,7 +21,7 @@ public class Shaders {
     public static final String sFragmentShaderSourc =
             "precision mediump float;" +
                     "void main() {" +
-                    "  gl_FragColor = vec4(0.8, 0.4, 0.2, 1.0);" +
+                    "  gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);" +
                     "}";
 
 }
