@@ -57,25 +57,37 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
-//        //画面をクリア
-//        GLES20.glClearColor(0.5f, 0.8f, 0.3f, 0.5f);
-//
-//        //シェーダーをコンパイル
-//        int vertexShader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
-//        GLES20.glShaderSource(vertexShader, Shaders.sVertexShaderSource);
-//        GLES20.glCompileShader(vertexShader);
-//
-//        //シェーダーをコンパイル
-//        int fragmentShader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
-//        GLES20.glShaderSource(fragmentShader, Shaders.sFragmentShaderSource);
-//        GLES20.glCompileShader(fragmentShader);
-//
-//        mProgramId = GLES20.glCreateProgram();
-//        //シェーダーをプログラムにリンクする
-//        GLES20.glAttachShader(mProgramId, vertexShader);
-//        GLES20.glAttachShader(mProgramId, fragmentShader);
-//        GLES20.glLinkProgram(mProgramId);
-//        GLES20.glUseProgram(mProgramId);
+        //画面をクリア
+        GLES20.glClearColor(0.5f, 0.8f, 0.3f, 0.5f);
+
+        //シェーダーをコンパイル
+        int vertexShader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
+        GLES20.glShaderSource(vertexShader, Shaders.sVertexShaderSource);
+        GLES20.glCompileShader(vertexShader);
+
+        //シェーダーをコンパイル
+        int fragmentShader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
+        GLES20.glShaderSource(fragmentShader, Shaders.sFragmentShaderSource);
+        GLES20.glCompileShader(fragmentShader);
+
+        mProgramId = GLES20.glCreateProgram();
+        //シェーダーをプログラムにリンクする
+        GLES20.glAttachShader(mProgramId, vertexShader);
+        GLES20.glAttachShader(mProgramId, fragmentShader);
+        GLES20.glLinkProgram(mProgramId);
+
+//        -----------------------------------------------
+
+        int VertexShader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
+        GLES20.glShaderSource(VertexShader, Shaders.sVertexShaderSource);
+        GLES20.glCompileShader(VertexShader);
+        int FragmentShader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
+        GLES20.glShaderSource(FragmentShader, Shaders.sFragmentShaderSourc);
+        GLES20.glCompileShader(FragmentShader);
+        programId = GLES20.glCreateProgram();
+        GLES20.glAttachShader(programId, VertexShader);
+        GLES20.glAttachShader(programId, FragmentShader);
+        GLES20.glLinkProgram(programId);
     }
 
     @Override
@@ -103,25 +115,9 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onDrawFrame(GL10 gl10) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+        GLES20.glUseProgram(mProgramId);
         FloatBuffer vertexBuffer = Utils.convert(vert(0.25f));
         ShortBuffer indexBuffer = Utils.convert(inde());
-
-        //シェーダーをコンパイル
-        int vertexShader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
-        GLES20.glShaderSource(vertexShader, Shaders.sVertexShaderSource);
-        GLES20.glCompileShader(vertexShader);
-
-        //シェーダーをコンパイル
-        int fragmentShader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
-        GLES20.glShaderSource(fragmentShader, Shaders.sFragmentShaderSource);
-        GLES20.glCompileShader(fragmentShader);
-
-        mProgramId = GLES20.glCreateProgram();
-        //シェーダーをプログラムにリンクする
-        GLES20.glAttachShader(mProgramId, vertexShader);
-        GLES20.glAttachShader(mProgramId, fragmentShader);
-        GLES20.glLinkProgram(mProgramId);
-        GLES20.glUseProgram(mProgramId);
 
         float[] worldMatrix = new float[16];
         Matrix.setIdentityM(worldMatrix, 0);
@@ -141,16 +137,6 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
 
         GLES20.glDisableVertexAttribArray(attLoc1);
 
-        int VertexShader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
-        GLES20.glShaderSource(VertexShader, Shaders.sVertexShaderSource);
-        GLES20.glCompileShader(VertexShader);
-        int FragmentShader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
-        GLES20.glShaderSource(FragmentShader, Shaders.sFragmentShaderSourc);
-        GLES20.glCompileShader(FragmentShader);
-        programId = GLES20.glCreateProgram();
-        GLES20.glAttachShader(programId, VertexShader);
-        GLES20.glAttachShader(programId, FragmentShader);
-        GLES20.glLinkProgram(programId);
         GLES20.glUseProgram(programId);
 
         FloatBuffer vertexBuffe = Utils.convert(vert(-1.3f));
