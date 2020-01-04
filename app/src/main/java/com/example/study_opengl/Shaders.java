@@ -11,17 +11,34 @@ public class Shaders {
                     "  gl_Position = vpMatrix * wMatrix * vec4(position, 1.0);" +
                     "}";
 
-    //Fragmentシェーダー
-    public static final String sFragmentShaderSource1 =
-            "precision mediump float;" +
-                    "void main() {" +
-                    "  gl_FragColor = vec4(0.4, 0.3, 0.9, 0.4);" +
-                    "}";
+    public static String createOne() {
+        String s = String.valueOf((float)(MainActivity.c_red)/10.0f);
+        String sFragmentShaderSource =
+                "precision mediump float;" +
+                        "void main() {" +
+                        "  gl_FragColor = vec4(0.4, " + s + ", 0.0, 0.6);" +
+                        "}";
+        return sFragmentShaderSource;
+    }
 
-    public static final String sFragmentShaderSource2 =
-            "precision mediump float;" +
-                    "void main() {" +
-                    "  gl_FragColor = vec4(0.8, 0.4, 0.2, 0.4);" +
-                    "}";
+    public static String createTwo() {
+        String s = String.valueOf((float)(MainActivity.c_green)/10.0f);
+        String sFragmentShaderSource =
+                "precision mediump float;" +
+                        "void main() {" +
+                        "  gl_FragColor = vec4(0.0, 0.4, " + s + ", 0.6);" +
+                        "}";
+        return sFragmentShaderSource;
+    }
 
+    public static String createThree() {
+        String s = String.valueOf((float)(MainActivity.c_blue)/10.0f);
+        String sFragmentShaderSource =
+                "precision mediump float;" +
+                        "void main() {" +
+                        "  gl_FragColor = vec4(" + s + ", 0.0, 0.4, 0.6);" +
+                        "}";
+        System.out.println(sFragmentShaderSource);
+        return sFragmentShaderSource;
+    }
 }

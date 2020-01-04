@@ -20,15 +20,41 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <SeekBar
-        android:id="@+id/changer"
+        android:id="@+id/red"
         android:layout_width="174dp"
         android:layout_height="29dp"
-        android:progress="2"
-        android:max="50"
+        android:progress="0"
+        android:max="10"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/glSurfaceView"
         app:layout_constraintVertical_bias="0.824" />
+
+    <SeekBar
+        android:id="@+id/green"
+        android:layout_width="174dp"
+        android:layout_height="29dp"
+        android:max="10"
+        android:progress="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/glSurfaceView"
+        app:layout_constraintVertical_bias="0.866" />
+
+    <SeekBar
+        android:id="@+id/blue"
+        android:layout_width="174dp"
+        android:layout_height="29dp"
+        android:max="10"
+        android:progress="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/glSurfaceView"
+        app:layout_constraintVertical_bias="0.907" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
