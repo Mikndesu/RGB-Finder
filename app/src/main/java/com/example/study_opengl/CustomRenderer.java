@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import static android.opengl.GLES20.GL_BLEND;
+import static android.opengl.GLES20.GL_ONE;
+
 public class CustomRenderer implements GLSurfaceView.Renderer {
 
     private final Context context;
@@ -23,17 +26,17 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
         context = cont;
     }
 
-    public float[] vert(float x) {
+    public float[] vert(int x,int y) {
         //n角形
         int n = MainActivity.corners;
         ArrayList<Float> a_vertices = new ArrayList<>();
         for(int i = 0; i < n; i++) {
             float a, b;
-                a = length * (float)(Math.cos(Math.toRadians((360/n)*i)));
-                b = length * (float)(Math.sin(Math.toRadians((360/n)*i)));
-                a_vertices.add(x * a);
-                a_vertices.add(x * (b + 300f));
-                a_vertices.add(0f);
+            a = length * (float)(Math.cos(Math.toRadians((360/n)*i)));
+            b = length * (float)(Math.sin(Math.toRadians((360/n)*i)));
+            a_vertices.add(x + a);
+            a_vertices.add(y + b);
+            a_vertices.add(0f);
         }
         float[] verticies = Utils.toArray_f(a_vertices);
         return verticies;
@@ -48,9 +51,8 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
         short[] indices = Utils.toArray_s(a_indices);
         return indices;
     }
-
     //プログラムのID
-    private int mProgramId, programId;
+    private int program1, program2;
     private float[] mViewAndProjectionMatrix = new float[16];
     //フレームレート
     private long mFrameCount = 0;
@@ -58,36 +60,32 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
         //画面をクリア
-        GLES20.glClearColor(0.5f, 0.8f, 0.3f, 0.5f);
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.3f);
 
         //シェーダーをコンパイル
-        int vertexShader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
-        GLES20.glShaderSource(vertexShader, Shaders.sVertexShaderSource);
-        GLES20.glCompileShader(vertexShader);
+        int vertexShader1 = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
+        GLES20.glShaderSource(vertexShader1, Shaders.sVertexShaderSource);
+        GLES20.glCompileShader(vertexShader1);
+        int fragmentShader1 = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
+        GLES20.glShaderSource(fragmentShader1, Shaders.sFragmentShaderSource1);
+        GLES20.glCompileShader(fragmentShader1);
+        program1 = GLES20.glCreateProgram();
+        GLES20.glAttachShader(program1, vertexShader1);
+        GLES20.glAttachShader(program1, fragmentShader1);
+        GLES20.glLinkProgram(program1);
+        GLES20.glUseProgram(program1);
 
-        //シェーダーをコンパイル
-        int fragmentShader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
-        GLES20.glShaderSource(fragmentShader, Shaders.sFragmentShaderSource);
-        GLES20.glCompileShader(fragmentShader);
-
-        mProgramId = GLES20.glCreateProgram();
-        //シェーダーをプログラムにリンクする
-        GLES20.glAttachShader(mProgramId, vertexShader);
-        GLES20.glAttachShader(mProgramId, fragmentShader);
-        GLES20.glLinkProgram(mProgramId);
-
-//        -----------------------------------------------
-
-        int VertexShader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
-        GLES20.glShaderSource(VertexShader, Shaders.sVertexShaderSource);
-        GLES20.glCompileShader(VertexShader);
-        int FragmentShader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
-        GLES20.glShaderSource(FragmentShader, Shaders.sFragmentShaderSourc);
-        GLES20.glCompileShader(FragmentShader);
-        programId = GLES20.glCreateProgram();
-        GLES20.glAttachShader(programId, VertexShader);
-        GLES20.glAttachShader(programId, FragmentShader);
-        GLES20.glLinkProgram(programId);
+        int vertexShader2 = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
+        GLES20.glShaderSource(vertexShader2, Shaders.sVertexShaderSource);
+        GLES20.glCompileShader(vertexShader2);
+        int fragmentShader2 = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
+        GLES20.glShaderSource(fragmentShader2, Shaders.sFragmentShaderSource2);
+        GLES20.glCompileShader(fragmentShader2);
+        program2 = GLES20.glCreateProgram();
+        GLES20.glAttachShader(program2, vertexShader2);
+        GLES20.glAttachShader(program2, fragmentShader2);
+        GLES20.glLinkProgram(program2);
+        GLES20.glUseProgram(program2);
     }
 
     @Override
@@ -114,50 +112,40 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl10) {
+        GLES20.glEnable(GL_BLEND);
+        GLES20.glBlendFunc(GL_ONE, GL_ONE);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-        GLES20.glUseProgram(mProgramId);
-        FloatBuffer vertexBuffer = Utils.convert(vert(0.25f));
         ShortBuffer indexBuffer = Utils.convert(inde());
 
-        float[] worldMatrix = new float[16];
-        Matrix.setIdentityM(worldMatrix, 0);
-        Matrix.rotateM(worldMatrix, 0, (float) mFrameCount / 2.0f, 0, 0, 1);
-
-        int attLoc1 = GLES20.glGetAttribLocation(mProgramId, "position");
-        int uniLoc1 = GLES20.glGetUniformLocation(mProgramId, "vpMatrix");
-        int uniLoc2 = GLES20.glGetUniformLocation(mProgramId, "wMatrix");
-        GLES20.glEnableVertexAttribArray(attLoc1);
-
-        GLES20.glVertexAttribPointer(attLoc1, 3, GLES20.GL_FLOAT, false, 0, vertexBuffer);
-        GLES20.glUniformMatrix4fv(uniLoc1, 1, false, mViewAndProjectionMatrix, 0);
-        GLES20.glUniformMatrix4fv(uniLoc2, 1, false, worldMatrix, 0);
-
-        //描画
-        GLES20.glDrawElements(GLES20.GL_TRIANGLE_FAN, indexBuffer.capacity(), GLES20.GL_UNSIGNED_SHORT, indexBuffer);
-
-        GLES20.glDisableVertexAttribArray(attLoc1);
-
-        GLES20.glUseProgram(programId);
-
-        FloatBuffer vertexBuffe = Utils.convert(vert(-1.3f));
-
+        FloatBuffer vertexBuffer1 = Utils.convert(vert(100, 100));
         float[] worldMatrix1 = new float[16];
         Matrix.setIdentityM(worldMatrix1, 0);
         Matrix.rotateM(worldMatrix1, 0, (float) mFrameCount / 2.0f, 0, 0, 1);
-
-        int attLoc11 = GLES20.glGetAttribLocation(programId, "position");
-        int uniLoc11 = GLES20.glGetUniformLocation(programId, "vpMatrix");
-        int uniLoc21 = GLES20.glGetUniformLocation(programId, "wMatrix");
-        GLES20.glEnableVertexAttribArray(attLoc11);
-
-        GLES20.glVertexAttribPointer(attLoc11, 3, GLES20.GL_FLOAT, false, 0, vertexBuffe);
-        GLES20.glUniformMatrix4fv(uniLoc11, 1, false, mViewAndProjectionMatrix, 0);
-        GLES20.glUniformMatrix4fv(uniLoc21, 1, false, worldMatrix1, 0);
-
-        //描画
+        int attLoc1 = GLES20.glGetAttribLocation(program1, "position");
+        int uniLoc1 = GLES20.glGetUniformLocation(program1, "vpMatrix");
+        int uniLoc1_2 = GLES20.glGetUniformLocation(program1, "wMatrix");
+        GLES20.glEnableVertexAttribArray(attLoc1);
+        GLES20.glVertexAttribPointer(attLoc1, 3, GLES20.GL_FLOAT, false, 0, vertexBuffer1);
+        GLES20.glUniformMatrix4fv(uniLoc1, 1, false, mViewAndProjectionMatrix, 0);
+        GLES20.glUniformMatrix4fv(uniLoc1_2, 1, false, worldMatrix1, 0);
         GLES20.glDrawElements(GLES20.GL_TRIANGLE_FAN, indexBuffer.capacity(), GLES20.GL_UNSIGNED_SHORT, indexBuffer);
-        GLES20.glDisableVertexAttribArray(attLoc11);
+        GLES20.glDisableVertexAttribArray(attLoc1);
+
+
+        FloatBuffer vertexBuffer2 = Utils.convert(vert(-100, -100));
+        float[] worldMatrix2 = new float[16];
+        Matrix.setIdentityM(worldMatrix2, 0);
+        Matrix.rotateM(worldMatrix2, 0, (float) mFrameCount / 2.0f, 0, 0, 1);
+        int attLoc2 = GLES20.glGetAttribLocation(program2, "position");
+        int uniLoc2 = GLES20.glGetUniformLocation(program2, "vpMatrix");
+        int uniLoc2_2 = GLES20.glGetUniformLocation(program2, "wMatrix");
+        GLES20.glEnableVertexAttribArray(attLoc2);
+        GLES20.glVertexAttribPointer(attLoc2, 3, GLES20.GL_FLOAT, false, 0, vertexBuffer2);
+        GLES20.glUniformMatrix4fv(uniLoc2, 1, false, mViewAndProjectionMatrix, 0);
+        GLES20.glUniformMatrix4fv(uniLoc2_2, 1, false, worldMatrix2, 0);
+        GLES20.glDrawElements(GLES20.GL_TRIANGLE_FAN, indexBuffer.capacity(), GLES20.GL_UNSIGNED_SHORT, indexBuffer);
+        GLES20.glDisableVertexAttribArray(attLoc2);
 
         mFrameCount++;
     }
-    }
+}

@@ -12,16 +12,16 @@ public class Shaders {
                     "}";
 
     //Fragmentシェーダー
-    public static final String sFragmentShaderSource =
+    public static final String sFragmentShaderSource1 =
             "precision mediump float;" +
                     "void main() {" +
-                    "  gl_FragColor = vec4(0.4, 0.3, 0.9, 1.0);" +
+                    "  gl_FragColor = vec4(0.4, 0.3, 0.9, 0.4);" +
                     "}";
 
-    public static final String sFragmentShaderSourc =
+    public static final String sFragmentShaderSource2 =
             "precision mediump float;" +
                     "void main() {" +
-                    "  gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);" +
+                    "  gl_FragColor = vec4(0.8, 0.4, 0.2, 0.4);" +
                     "}";
 
 }
