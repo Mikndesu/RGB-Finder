@@ -4,6 +4,7 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
@@ -60,7 +61,7 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
         //画面をクリア
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.3f);
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
         //シェーダーをコンパイル
         int vertexShader1 = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
@@ -73,6 +74,8 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
         GLES20.glAttachShader(program1, vertexShader1);
         GLES20.glAttachShader(program1, fragmentShader1);
         GLES20.glLinkProgram(program1);
+        GLES20.glDeleteShader(vertexShader1);
+        GLES20.glDeleteShader(fragmentShader1);
 
         int vertexShader2 = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
         GLES20.glShaderSource(vertexShader2, Shaders.sVertexShaderSource);
@@ -84,6 +87,8 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
         GLES20.glAttachShader(program2, vertexShader2);
         GLES20.glAttachShader(program2, fragmentShader2);
         GLES20.glLinkProgram(program2);
+        GLES20.glDeleteShader(vertexShader2);
+        GLES20.glDeleteShader(fragmentShader2);
 
         int vertexShader3 = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
         GLES20.glShaderSource(vertexShader3, Shaders.sVertexShaderSource);
@@ -95,6 +100,8 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
         GLES20.glAttachShader(program3, vertexShader3);
         GLES20.glAttachShader(program3, fragmentShader3);
         GLES20.glLinkProgram(program3);
+        GLES20.glDeleteShader(vertexShader3);
+        GLES20.glDeleteShader(fragmentShader3);
     }
 
     @Override
@@ -160,7 +167,7 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
         ShortBuffer indexBuffer = Utils.convert(inde());
 
         GLES20.glUseProgram(program1);
-        FloatBuffer vertexBuffer1 = Utils.convert(vert(00, 350));
+        FloatBuffer vertexBuffer1 = Utils.convert(vert(00, 435));
         float[] worldMatrix1 = new float[16];
         Matrix.setIdentityM(worldMatrix1, 0);
 //        Matrix.rotateM(worldMatrix1, 0, (float) mFrameCount / 2.0f, 0, 0, 1);
@@ -205,5 +212,10 @@ public class CustomRenderer implements GLSurfaceView.Renderer {
         GLES20.glDisableVertexAttribArray(attLoc3);
 
         mFrameCount++;
+        Log.d("FrameCount", String.valueOf(mFrameCount));
+        GLES20.glUseProgram(0);
+        GLES20.glDeleteProgram(program1);
+        GLES20.glDeleteProgram(program2);
+        GLES20.glDeleteProgram(program3);
     }
 }
