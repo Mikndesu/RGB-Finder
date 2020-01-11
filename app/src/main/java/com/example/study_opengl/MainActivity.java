@@ -2,6 +2,10 @@ package com.example.study_opengl;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +42,30 @@ public class MainActivity extends AppCompatActivity {
         vred.setText(String.valueOf((int) (((float)(c_red))*2.55f)));
         vgreen.setText(String.valueOf((int)(((float)(c_green))*2.55f)));
         vblue.setText(String.valueOf((int)(((float)(c_blue))*2.55f)));
+
+        vred.setOnClickListener((v)->
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("RGB Generater")
+                    .setMessage("Copy the HexRGB to ClipBoard")
+                    .setPositiveButton("Ok", ((d, w)->{ClipboardManager cm = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                        cm.setPrimaryClip(ClipData.newPlainText("", generateHexCode()));}))
+                    .setNegativeButton("Cancel", ((d, w)->{}))
+                    .show());
+        vgreen.setOnClickListener((v)->
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("RGB Generater")
+                    .setMessage("Copy the HexRGB to ClipBoard")
+                    .setPositiveButton("Ok", ((d, w)->{ClipboardManager cm = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                        cm.setPrimaryClip(ClipData.newPlainText("", generateHexCode()));}))
+                    .setNegativeButton("Cancel", ((d, w)->{}))
+                    .show());
+        vblue.setOnClickListener((v)-> new AlertDialog.Builder(MainActivity.this)
+                .setTitle("RGB Generater")
+                .setMessage("Copy the HexRGB to ClipBoard")
+                .setPositiveButton("Ok", ((d, w)->{ClipboardManager cm = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                    cm.setPrimaryClip(ClipData.newPlainText("", generateHexCode()));}))
+                .setNegativeButton("Cancel", ((d, w)->{}))
+                .show());
 
         red = findViewById(R.id.red);
         red.setOnSeekBarChangeListener(
@@ -106,10 +134,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     String generateHexCode() {
-        final int red_code = c_red;
-        final int green_code = c_green;
-        final int blue_code = c_blue;
+        String s_red, s_green, s_blue;
+        if(c_red <= 15) {
+            s_red = "0"+Integer.toHexString(c_red);
+        } else {
+            s_red = Integer.toHexString(c_red);
+        }
+        if(c_green <= 15) {
+            s_green = "0"+Integer.toHexString(c_green);
+        } else {
+            s_green = Integer.toHexString(c_green);
+        }
+        if(c_blue <= 15) {
+            s_blue = "0"+Integer.toHexString(c_blue);
+        } else {
+            s_blue = Integer.toHexString(c_blue);
+        }
 
-        return "#"+Integer.toHexString(red_code)+Integer.toHexString(green_code)+Integer.toHexString(blue_code);
+        return "#"+s_red+s_green+s_blue;
     }
 }
