@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     private GLSurfaceView glSurfaceView;
 
-    private TextView vred, vgreen, vblue;
+    private TextView vred, vgreen, vblue, r, g, b;
 
     SeekBar red, green, blue;
 
@@ -38,34 +38,62 @@ public class MainActivity extends AppCompatActivity {
         vred = findViewById(R.id.vred);
         vgreen = findViewById(R.id.vgreen);
         vblue = findViewById(R.id.vblue);
+        r = findViewById(R.id.r);
+        g = findViewById(R.id.g);
+        b = findViewById(R.id.b);
 
         vred.setText(String.valueOf((int) (((float)(c_red))*2.55f)));
         vgreen.setText(String.valueOf((int)(((float)(c_green))*2.55f)));
         vblue.setText(String.valueOf((int)(((float)(c_blue))*2.55f)));
 
         vred.setOnClickListener((v)->
-            new AlertDialog.Builder(MainActivity.this)
+                new AlertDialog.Builder(MainActivity.this)
                     .setTitle("RGB Generater")
                     .setMessage("Copy the HexRGB to ClipBoard")
-                    .setPositiveButton("Ok", ((d, w)->{ClipboardManager cm = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                    .setPositiveButton("OK", ((d, w)->{ClipboardManager cm = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
                         cm.setPrimaryClip(ClipData.newPlainText("", generateHexCode()));}))
                     .setNegativeButton("Cancel", ((d, w)->{}))
                     .show());
         vgreen.setOnClickListener((v)->
-            new AlertDialog.Builder(MainActivity.this)
+                new AlertDialog.Builder(MainActivity.this)
                     .setTitle("RGB Generater")
                     .setMessage("Copy the HexRGB to ClipBoard")
-                    .setPositiveButton("Ok", ((d, w)->{ClipboardManager cm = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                    .setPositiveButton("OK", ((d, w)->{ClipboardManager cm = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
                         cm.setPrimaryClip(ClipData.newPlainText("", generateHexCode()));}))
                     .setNegativeButton("Cancel", ((d, w)->{}))
                     .show());
-        vblue.setOnClickListener((v)-> new AlertDialog.Builder(MainActivity.this)
+        vblue.setOnClickListener((v)->
+                new AlertDialog.Builder(MainActivity.this)
                 .setTitle("RGB Generater")
                 .setMessage("Copy the HexRGB to ClipBoard")
-                .setPositiveButton("Ok", ((d, w)->{ClipboardManager cm = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                .setPositiveButton("OK", ((d, w)->{ClipboardManager cm = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
                     cm.setPrimaryClip(ClipData.newPlainText("", generateHexCode()));}))
                 .setNegativeButton("Cancel", ((d, w)->{}))
                 .show());
+        r.setOnClickListener((v)->
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("RGB Generater")
+                        .setMessage("Copy the HexRGB to ClipBoard")
+                        .setPositiveButton("OK", ((d, w)->{ClipboardManager cm = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                            cm.setPrimaryClip(ClipData.newPlainText("", generateHexCode()));}))
+                        .setNegativeButton("Cancel", ((d, w)->{}))
+                        .show());
+        g.setOnClickListener((v)->
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("RGB Generater")
+                        .setMessage("Copy the HexRGB to ClipBoard")
+                        .setPositiveButton("OK", ((d, w)->{ClipboardManager cm = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                            cm.setPrimaryClip(ClipData.newPlainText("", generateHexCode()));}))
+                        .setNegativeButton("Cancel", ((d, w)->{}))
+                        .show());
+        b.setOnClickListener((v)->
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("RGB Generater")
+                        .setMessage("Copy the HexRGB to ClipBoard")
+                        .setPositiveButton("OK", ((d, w)->{ClipboardManager cm = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                            cm.setPrimaryClip(ClipData.newPlainText("", generateHexCode()));}))
+                        .setNegativeButton("Cancel", ((d, w)->{}))
+                        .show());
 
         red = findViewById(R.id.red);
         red.setOnSeekBarChangeListener(
